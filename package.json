@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "npm test -- --watch",
-    "watch": "webpack-dev-server --progress --colors --hot --inline"
+    "watch": "webpack-dev-server --progress --colors --hot --inline",
+    "start": "./node_modules/webpack/bin/webpack.js -p --progress && node server.js"
   },
   "repository": {
     "type": "git",
