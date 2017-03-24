@@ -1,46 +1,50 @@
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './src/js/main.js',
+  entry: ['babel-polyfill', './src/js/index.jsx'],
 
   output: {
     path: './dist',
     filename: 'bundle.js'
   },
 
+  devtool: 'source-map',
+
   module: {
+    preLoaders: [
+      { test: /\.jsx?$/, loader: 'eslint', exclude: /node_modules/ }
+    ],
     loaders: [
+      { test: /\.css$/, loader: "style!css" },
+      { test: /\.less$/, loader: "style!css!less" },
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-            presets: ['es2015']
+          presets: ['react', 'es2015'],
+          plugins: ['transform-object-rest-spread'],
         }
       },
-      {
-        test: /\.less$/,
-        loader: "style!css!less"
-      },
-      {
-        test: /\.(jpg|png|gif)$/,
-        include: /img/,
-        loader: 'url'
-      },
+      { test: /\.(jpe?g|png|gif|svg)$/i, loader: 'url?limit=10000!img?progressive=true' },
+      { test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
     ]
   },
 
   plugins: [
     new CopyWebpackPlugin([
-      { from: './src/index.html' }
-    ]),
-    new CopyWebpackPlugin([
-      { from: './src/vendors/phaser.min.js' }
-    ]),
-    new CopyWebpackPlugin([
-      { from: './src/assets', to: 'assets' }
+      { from: './src/html/index.html' }
     ])
   ],
+
+  eslint: {
+    configFile: './.eslintrc.js',
+    failOnWarning: false,
+    failOnError: true,
+  },
 
   resolve: {
     extensions: ['', '.js', '.jsx']
