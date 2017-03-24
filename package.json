@@ -8,8 +8,9 @@
   "description": "An book store based on Google Books API",
   "main": "src/js/index.js",
   "scripts": {
-    "start": "./node_modules/webpack/bin/webpack.js -p --progress && node server.js",
+    "start": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --config ./webpack.production.config.js && node server.js",
     "watch": "webpack-dev-server --progress --colors --hot --inline",
+    "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Pablo Darde",
