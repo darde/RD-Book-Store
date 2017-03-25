@@ -1,17 +1,15 @@
-var webpack = require('webpack');
-var path = require("path"),
-  CopyWebpackPlugin = require('copy-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: {
-    babelPolyfill: 'babel-polyfill',
-    app: path.resolve(__dirname, "./src/js/App.jsx")
-  },
+  entry: ['babel-polyfill', './src/js/index.jsx'],
+
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "[name].bundle.js"
+    path: './dist',
+    filename: 'bundle.js'
   },
+
   devtool: 'source-map',
+
   module: {
     preLoaders: [
       { test: /\.jsx?$/, loader: 'eslint', exclude: /node_modules/ }
@@ -35,32 +33,26 @@ module.exports = {
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
     ]
   },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
+
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: './src/html/index.html' }
+    ])
+  ],
+
   eslint: {
     configFile: './.eslintrc.js',
     failOnWarning: false,
     failOnError: true,
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development'), // Tells React to build in either dev or prod modes. https://facebook.github.io/react/downloads.html (See bottom)
-      __DEV__: true
-    }),
-    new CopyWebpackPlugin([{
-      from: './src/html/index.html'
-    }]),
-    new CopyWebpackPlugin([{
-      from: './src/img', to: 'img'
-    }]),
-  ],
+
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
+
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: 4000,
     inline: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*"
-    }
+    contentBase: './dist',
+    port: 5000
   }
 };

@@ -3,7 +3,6 @@ module.exports = {
     "globals": {
       "window": true,
       "document": true,
-      "SYMPHONY": true,
     },
     "plugins": [
         "react",
@@ -13,7 +12,6 @@ module.exports = {
     "rules": {
       "jsx-quotes": 0,
       "no-param-reassign": ["error", { "props": false }],
-      "jsx-a11y/href-no-hash": 0,
       "class-methods-use-this": 0,
       "one-var": 0,
       "no-underscore-dangle": 0,
@@ -23,5 +21,7 @@ module.exports = {
       "import/no-named-as-default": "warn",
       "array-callback-return": "warn",
       "import/prefer-default-export": "warn",
+      "react/no-array-index-key": 0,
+      "no-debugger": "warn"
     },
 };
