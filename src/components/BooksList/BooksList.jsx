@@ -1,22 +1,20 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable space-infix-ops */
-/* eslint-disable no-bitwise */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import BookListItem from '../BookListItem/BookListItem';
 import {
   searchKeyword as searchByKeyword,
 } from '../../actions';
 import './styles/styles.less';
 
-class Books extends Component {
+class BooksList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      author: false,
       title: true,
+      author: false,
+      subject: false,
     };
     this.toggleCheckBox = this.toggleCheckBox.bind(this);
-    this.highlight = this.highlight.bind(this);
   }
 
   toggleCheckBox(e) {
@@ -28,24 +26,31 @@ class Books extends Component {
       this.setState({
         author: !this.state.author,
       });
+    } else if (e.target.id === 'subject') {
+      this.setState({
+        subject: !this.state.subject,
+      });
     }
-  }
-
-  highlight(title) {
-    let _title = title;
-    if (this.props.keyword !== '') {
-      const key = this.props.keyword;
-      const reg = new RegExp(this.props.keyword, 'ig');
-      _title = title.replace(reg, key => `<span style='background: #ff0;'>${key}</span>`);
-    }
-    return { __html: _title };
   }
 
   render() {
+    let labelFound;
+    switch (this.props.books.length) {
+      case 0:
+        labelFound = 'No results.';
+        break;
+      case 1:
+        labelFound = '1 result found.';
+        break;
+      default:
+        labelFound = `${this.props.books.length} results found.`;
+        break;
+    }
     return (
       <div>
         <header>
           <h1>Books</h1>
+          <h2>Total: {labelFound}</h2>
         </header>
         <div className='search-books'>
           <label htmlFor='search'>Search for keyword</label>
@@ -77,52 +82,68 @@ class Books extends Component {
           <button
             onClick={
               () => {
-                this.props.searchKeyword(this.input.value, this.state.title, this.state.author);
+                this.props.searchKeyword(
+                  this.input.value, this.state.title, this.state.author, this.state.subject);
               }
             }
           >
             Search
           </button>
         </div>
-        <ul>
-          {
-            this.props.books.map((book, idx) =>
-              <li key={idx}>
-                <div dangerouslySetInnerHTML={this.highlight(book.volumeInfo.title)} />
-              </li>,
-            )
-          }
-        </ul>
+        {
+          this.props.books.length > 0 ? (
+            <ul>
+              {
+                this.props.books.map((book, idx) =>
+                  <li key={idx}>
+                    <BookListItem
+                      id={book.id}
+                      title={book.volumeInfo.title || ''}
+                      smallThumbnail={
+                        book.volumeInfo.imageLinks ?
+                          book.volumeInfo.imageLinks.smallThumbnail : ''
+                      }
+                      keyword={this.props.keyword}
+                      authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
+                      publishedDate={
+                        book.volumeInfo.publishedDate ?
+                          book.volumeInfo.publishedDate :
+                          'not available'
+                      }
+                      searchByTitle={this.props.searchByTitle}
+                      searchByAuthor={this.props.searchByAuthor}
+                    />
+                  </li>,
+                )
+              }
+            </ul>
+          ) : <div>No results</div>
+        }
       </div>
     );
   }
 }
 
-Books.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string,
-    author: PropTypes.string,
-  })),
+BooksList.propTypes = {
+  books: PropTypes.arrayOf(PropTypes.shape),
   keyword: PropTypes.string,
+  searchByTitle: PropTypes.bool,
+  searchByAuthor: PropTypes.bool,
   searchKeyword: PropTypes.func.isRequired,
 };
 
-Books.defaultProps = {
+BooksList.defaultProps = {
   books: [],
   keyword: '',
-};
-
-const Highight = ({ text }) => (
-  <span>{text}</span>
-);
-
-Highight.propTypes = {
-  text: PropTypes.string.isRequired,
+  searchByTitle: false,
+  searchByAuthor: false,
 };
 
 const mapStateToProps = state => ({
   books: state.books,
   keyword: state.search.keyword,
+  searchByTitle: state.search.title,
+  searchByAuthor: state.search.author,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -134,4 +155,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Books);
+)(BooksList);
