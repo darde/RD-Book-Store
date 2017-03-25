@@ -1,10 +1,10 @@
 import React from 'react';
-import Books from './Books';
+import BooksList from './BooksList/BooksList';
 
 const Home = () => (
   <div>
     <h1>Hello Book Store</h1>
-    <Books />
+    <BooksList />
   </div>
 );
 

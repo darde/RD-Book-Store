@@ -22,6 +22,7 @@ module.exports = {
       "array-callback-return": "warn",
       "import/prefer-default-export": "warn",
       "react/no-array-index-key": 0,
-      "no-debugger": "warn"
+      "no-debugger": "warn",
+      "react/require-default-props": 0,
     },
 };
