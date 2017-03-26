@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../BookListItem/BookListItem';
+import Pagination from '../Pagination/Pagination';
 import {
   searchKeyword as searchByKeyword,
 } from '../../actions';
@@ -34,16 +35,21 @@ class BooksList extends Component {
   }
 
   render() {
-    let labelFound;
-    switch (this.props.books.length) {
+    let labelFound,
+      startIndex,
+      endIndex;
+    switch (this.props.totalResults) {
       case 0:
-        labelFound = 'No results.';
+        labelFound = 'No results found.';
         break;
       case 1:
         labelFound = '1 result found.';
         break;
       default:
-        labelFound = `${this.props.books.length} results found.`;
+        startIndex =
+          (this.props.currentPage * this.props.itemsPerPage) - (this.props.itemsPerPage - 1);
+        endIndex = this.props.currentPage * this.props.itemsPerPage;
+        labelFound = `Showing ${startIndex} to ${endIndex} from ${this.props.totalResults} results found.`;
         break;
     }
     return (
@@ -91,32 +97,35 @@ class BooksList extends Component {
           </button>
         </div>
         {
-          this.props.books.length > 0 ? (
-            <ul>
-              {
-                this.props.books.map((book, idx) =>
-                  <li key={idx}>
-                    <BookListItem
-                      id={book.id}
-                      title={book.volumeInfo.title || ''}
-                      smallThumbnail={
-                        book.volumeInfo.imageLinks ?
-                          book.volumeInfo.imageLinks.smallThumbnail : ''
-                      }
-                      keyword={this.props.keyword}
-                      authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
-                      publishedDate={
-                        book.volumeInfo.publishedDate ?
-                          book.volumeInfo.publishedDate :
-                          'not available'
-                      }
-                      searchByTitle={this.props.searchByTitle}
-                      searchByAuthor={this.props.searchByAuthor}
-                    />
-                  </li>,
-                )
-              }
-            </ul>
+          this.props.pageItems.length > 0 ? (
+            <div>
+              <ul>
+                {
+                  this.props.pageItems.map((book, idx) =>
+                    <li key={idx}>
+                      <BookListItem
+                        id={book.id}
+                        title={book.volumeInfo.title || ''}
+                        smallThumbnail={
+                          book.volumeInfo.imageLinks ?
+                            book.volumeInfo.imageLinks.smallThumbnail : ''
+                        }
+                        keyword={this.props.keyword}
+                        authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
+                        publishedDate={
+                          book.volumeInfo.publishedDate ?
+                            book.volumeInfo.publishedDate :
+                            'not available'
+                        }
+                        searchByTitle={this.props.searchByTitle}
+                        searchByAuthor={this.props.searchByAuthor}
+                      />
+                    </li>,
+                  )
+                }
+              </ul>
+              <Pagination />
+            </div>
           ) : <div>No results</div>
         }
       </div>
@@ -125,7 +134,10 @@ class BooksList extends Component {
 }
 
 BooksList.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.shape),
+  totalResults: PropTypes.number.isRequired,
+  pageItems: PropTypes.arrayOf(PropTypes.shape),
+  currentPage: PropTypes.number.isRequired,
+  itemsPerPage: PropTypes.number.isRequired,
   keyword: PropTypes.string,
   searchByTitle: PropTypes.bool,
   searchByAuthor: PropTypes.bool,
@@ -133,14 +145,16 @@ BooksList.propTypes = {
 };
 
 BooksList.defaultProps = {
-  books: [],
   keyword: '',
   searchByTitle: false,
   searchByAuthor: false,
 };
 
 const mapStateToProps = state => ({
-  books: state.books,
+  totalResults: state.books.totalResults,
+  pageItems: state.pagination.pageItems,
+  itemsPerPage: state.pagination.itemsPerPage,
+  currentPage: state.pagination.currentPage,
   keyword: state.search.keyword,
   searchByTitle: state.search.title,
   searchByAuthor: state.search.author,

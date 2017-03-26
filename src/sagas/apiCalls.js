@@ -12,10 +12,19 @@ export const fetchBooks = () =>
   axios.get(URL, {
     params: {
       q: 'inauthor:keyes',
+      maxResults,
       key: APIKey,
     },
   })
-  .then(response => response.data.items)
+  .then((response) => {
+    let items = [];
+    let totalResults = 0;
+    if (response.data.totalItems > 0) {
+      items = response.data.items.slice();
+      totalResults = response.data.totalItems;
+    }
+    return { items, totalResults };
+  })
   .catch(error => error);
 
 export const searchKeyword = (search) => {
@@ -40,10 +49,12 @@ export const searchKeyword = (search) => {
   })
   .then((response) => {
     let items = [];
-    if (response.data.items) {
+    let totalResults = 0;
+    if (response.data.totalItems > 0) {
       items = response.data.items.slice();
+      totalResults = response.data.totalItems;
     }
-    return items;
+    return { items, totalResults };
   })
   .catch(error => error);
 };

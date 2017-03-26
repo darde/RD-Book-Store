@@ -1,4 +1,6 @@
 // Actions
+export const CALL_FIRST_PAGE = 'CALL_FIRST_PAGE';
+export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const FETCH_BOOKS = 'FETCH_BOOKS';
 export const FETCH_BOOKS_FAILED = 'FETCH_BOOKS_FAILED';
 export const FETCH_BOOKS_SUCCESS = 'FETCH_BOOKS_SUCCESS';
@@ -28,4 +30,10 @@ export const searchKeyword = (keyword, title, author) => ({
 export const setActiveBook = id => ({
   type: SET_ACTIVE_BOOK,
   id,
+});
+
+export const changePage = (pageItems, currentPage) => ({
+  type: CHANGE_PAGE,
+  pageItems,
+  currentPage,
 });

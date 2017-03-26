@@ -1,0 +1,50 @@
+.pagination {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 90%;
+  padding: 10px 0;
+  border-top: 1px solid #dedede;
+
+  button {
+    display: inline-flex;
+    justify-content: center;
+    width: auto;
+    min-width: 35px;
+    height: 25px;
+    border: 0;
+    border-radius: 4px;
+    background: #dedede;
+
+    &.disabled {
+      cursor: inherit;
+    }
+
+    &.enabled {
+      cursor: pointer;
+    }
+  }
+
+  .pages {
+    ul {
+      display: inline-flex;
+
+      li {
+        float: left;
+        list-style-type: none;
+        list-style-position: inside;
+        margin-right: 5px;
+
+        button {
+          cursor: pointer;
+
+          &.active {
+            cursor: inherit;
+            background: #fff;
+            border: 1px solid #333;
+          }
+        }
+      }
+    }
+  }
+}
