@@ -1,37 +1,46 @@
 import {
-  CALL_FIRST_PAGE,
+  BUILD_PAGE,
   CHANGE_PAGE,
+  RESULTS_NOT_FOUND,
+  itemsArround,
   itemsPerPage,
+  maxResults,
 } from '../actions';
 
 const pagination = (
   state = {
     currentPage: 1,
+    currentPull: 0,
+    pulls: [],
+    maxResults,
     itemsPerPage,
-    totalFetched: 0,
+    itemsArround,
     totalResults: 0,
-    pageItems: [],
-    books: [],
   },
   action,
 ) => {
   switch (action.type) {
-    case CALL_FIRST_PAGE:
+    case BUILD_PAGE:
       debugger;
       return Object.assign({}, state, {
         ...state,
-        pageItems: action.pageItems,
-        totalFetched: action.totalFetched,
+        currentPage: action.currentPage,
+        currentPull: action.currentPull,
+        pulls: action.pulls,
         totalResults: action.totalResults,
-        currentPage: 1,
       });
     case CHANGE_PAGE:
       debugger;
       return Object.assign({}, state, {
         ...state,
-        pageItems: action.pageItems,
         currentPage: action.currentPage,
       });
+    // case PULL_NEW_PAGES:
+    //   return Object.assign({}, state, {
+    //     ...state,
+    //   });
+    case RESULTS_NOT_FOUND:
+      return state;
     default:
       return state;
   }

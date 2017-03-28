@@ -4,107 +4,110 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import {
   changePage as callNext,
+  pullNewPages as pullNew,
+  searchBooks as searchByKeyword,
 } from '../../actions';
 import './styles/styles.less';
 
 class Pagination extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      disableNext: true,
-      disablePrev: true,
-    };
-    this.pages = [];
-    this.goNextPage = this.goNextPage.bind(this);
-    this.reducePages = this.reducePages.bind(this);
-    this.togglePaginationButtons = this.togglePaginationButtons.bind(this);
+    this.totalPages = [];   // stores all page numbers
+    this.buttonPages = [];  // stores all visible page buttons
+    this.buildPageButtons = this.buildPageButtons.bind(this);
+    this.changePage = this.changePage.bind(this);
+    this.checkPullRequest = this.checkPullRequest.bind(this);
   }
 
   componentWillMount() {
-    if (this.props.totalFetched > this.props.pageItems.length) {
-      this.setState({
-        disableNext: false,
-      });
+    if (this.props.totalResults > 0) {
+      for (let i = 1; i <= Math.ceil(this.props.totalResults / this.props.itemsPerPage); i += 1) {
+        this.totalPages.push(i);
+      }
     }
-    this.reducePages(this.props);
+    this.buildPageButtons(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.totalFetched > nextProps.pageItems.length) {
-      this.setState({
-        disableNext: false,
-      });
-    }
-    this.reducePages(nextProps);
-    this.togglePaginationButtons(nextProps.currentPage);
+    this.buildPageButtons(nextProps);
+    // this.checkPullRequest(nextProps);
+    // debugger;
+    // if (this.props !== nextProps) {
+    //   this.checkPullRequest(nextProps);
+    // }
   }
 
-  reducePages(props) {
-    this.pages = [];
-    for (let i = 0; i < Math.floor(props.totalFetched / props.itemsPerPage); i += 1) {
-      this.pages.push(i + 1);
-    }
-  }
-
-  goNextPage(direction) {
+  buildPageButtons(props) {
     let startIndex,
-      endIndex,
-      page;
-    if (direction === 1) {
-      startIndex = this.props.currentPage * this.props.itemsPerPage;
-      endIndex = startIndex + this.props.itemsPerPage;
-      page = this.props.currentPage + 1;
-    } else if (direction === -1) {
-      startIndex =
-        ((this.props.currentPage - 1) * this.props.itemsPerPage) - this.props.itemsPerPage;
-      endIndex = startIndex + this.props.itemsPerPage;
-      page = this.props.currentPage - 1;
+      endIndex;
+    this.buttonPages = [];
+    if (this.totalPages.length > (2 * props.itemsArround) + 1) {
+      if (props.currentPage <= props.itemsArround) {
+        startIndex = 1;
+        endIndex = (2 * props.itemsArround) + 2;
+      } else {
+        startIndex = props.currentPage - props.itemsArround;
+        endIndex = props.currentPage + props.itemsArround;
+      }
+    } else {
+      startIndex = 1;
+      endIndex = this.totalPages.length;
     }
-    const pageItems = this.props.books.slice(startIndex, endIndex);
-    this.props.changePage(pageItems, page);
+    for (let i = startIndex; i < endIndex; i += 1) {
+      this.buttonPages.push(i);
+    }
+    // debugger;
   }
 
-  togglePaginationButtons(currentPage) {
-    const lastPage = Math.floor(this.props.totalResults / this.props.itemsPerPage);
-    if (currentPage === 1) {
-      this.setState({
-        disablePrev: true,
-        disableNext: false,
-      });
-    } else if (currentPage > 1 && currentPage < lastPage) {
-      this.setState({
-        disablePrev: false,
-        disableNext: false,
-      });
-    } else if (currentPage === lastPage) {
-      this.setState({
-        disablePrev: false,
-        disableNext: true,
-      });
+  changePage(page) {
+    this.props.changePage(page);
+    this.checkPullRequest(this.props, page);
+  }
+
+  checkPullRequest(props, _page) {
+    debugger;
+    const currentPage = _page || props.currentPage;
+    const pullRequested =
+      (Math.ceil(currentPage / (props.maxResults / props.itemsPerPage))) - 1;
+    const hasPull = props.pulls.some((item, idx) => {
+      if (idx === pullRequested && item === 1) {
+        return true;
+      }
+      return false;
+    });
+    // If the page was not pulled yet, call the api...
+    if (!hasPull) {
+      const remoteStartIndex = pullRequested * props.maxResults;
+      props.pullNewPages(remoteStartIndex);
     }
+    debugger;
   }
 
   render() {
     return (
       <div className='pagination'>
-        <button
-          disabled={this.state.disablePrev}
-          onClick={() => { this.goNextPage(-1); }}
-          className={this.state.disablePrev ? 'disabled' : 'enabled'}
-        >
+        <button>
           Previous
         </button>
         <div className='pages'>
           {
-            this.pages.length > 1 && (
+            this.totalPages.length > 0 && (
               <ul>
                 {
-                  this.pages.map((page, idx) =>
-                    <li key={idx}>
+                  this.totalPages.map((page, idx) =>
+                    <li
+                      key={idx}
+                      className={
+                        idx + 1 < this.buttonPages[0] ||
+                        idx + 1 > this.buttonPages[this.buttonPages.length - 1] ? 'hidden' : ''
+                      }
+                    >
                       <button
                         className={this.props.currentPage === idx + 1 ? 'active' : ''}
+                        onClick={() => { this.changePage(idx + 1); }}
+                        disabled={this.props.currentPage === idx + 1}
                       >
-                        <span>{page}</span>
+                        {page}
                       </button>
                     </li>,
                   )
@@ -113,11 +116,7 @@ class Pagination extends Component {
             )
           }
         </div>
-        <button
-          disabled={this.state.disableNext}
-          onClick={() => { this.goNextPage(1); }}
-          className={this.state.disableNext ? 'disabled' : 'enabled'}
-        >
+        <button>
           Next
         </button>
       </div>
@@ -126,43 +125,40 @@ class Pagination extends Component {
 }
 
 Pagination.propTypes = {
-  itemsPerPage: PropTypes.number,
-  totalFetched: PropTypes.number,
+  currentPage: PropTypes.number.isRequired,
+  itemsArround: PropTypes.number.isRequired,
+  itemsPerPage: PropTypes.number.isRequired,
+  keyword: PropTypes.string.isRequired,
+  maxResults: PropTypes.number.isRequired,
+  pulls: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  pullNewPages: PropTypes.func.isRequired,
+  remoteStartIndex: PropTypes.number.isRequired,
+  searchByAuthor: PropTypes.bool.isRequired,
+  searchByTitle: PropTypes.bool.isRequired,
   totalResults: PropTypes.number.isRequired,
-  pageItems: PropTypes.arrayOf(PropTypes.shape),
-  books: PropTypes.arrayOf(PropTypes.shape),
-  currentPage: PropTypes.number,
   changePage: PropTypes.func.isRequired,
-};
-
-Pagination.defaultProps = {
-  itemsPerPage: 0,
-  totalFetched: 0,
-  pageItems: [],
-  currentPage: 1,
+  searchKeyword: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  books: state.books.items,
-  itemsPerPage: state.pagination.itemsPerPage,
-  totalFetched: state.pagination.totalFetched,
-  totalResults: state.pagination.totalResults,
-  pageItems: state.pagination.pageItems,
   currentPage: state.pagination.currentPage,
+  itemsArround: state.pagination.itemsArround,
+  itemsPerPage: state.pagination.itemsPerPage,
+  keyword: state.search.keyword,
+  maxResults: state.pagination.maxResults,
+  pulls: state.pagination.pulls,
+  remoteStartIndex: state.search.remoteStartIndex,
+  searchByAuthor: state.search.author,
+  searchByTitle: state.search.title,
+  totalResults: state.pagination.totalResults,
 });
-// const mapStateToProps = (state) => {
-//   debugger;
-//   return {
-//     books: state.books,
-//     itemsPerPage: state.pagination.itemsPerPage,
-//     totalFetched: state.pagination.totalFetched,
-//     pageItems: state.pagination.pageItems,
-//     currentPage: state.pagination.currentPage,
-//   };
-// };
 
 const mapDispatchToProps = dispatch => ({
-  changePage: (pageItems, page) => { dispatch(callNext(pageItems, page)); },
+  changePage: (page) => { dispatch(callNext(page)); },
+  searchKeyword: (keyword, title, author, remoteStartIndex) => {
+    dispatch(searchByKeyword(keyword, title, author, remoteStartIndex));
+  },
+  pullNewPages: (startIndex) => { dispatch(pullNew(startIndex)); },
 });
 
 export default connect(

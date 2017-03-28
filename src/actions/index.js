@@ -1,39 +1,61 @@
 // Actions
-export const CALL_FIRST_PAGE = 'CALL_FIRST_PAGE';
+export const BUILD_PAGE = 'BUILD_PAGE';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
-export const FETCH_BOOKS = 'FETCH_BOOKS';
-export const FETCH_BOOKS_FAILED = 'FETCH_BOOKS_FAILED';
-export const FETCH_BOOKS_SUCCESS = 'FETCH_BOOKS_SUCCESS';
+// export const FETCH_BOOKS = 'FETCH_BOOKS';
+export const PULL_NEW_PAGES = 'PULL_NEW_PAGES';
 export const RESULTS_NOT_FOUND = 'RESULTS_NOT_FOUND';
-export const SEARCH_KEYWORD = 'SEARCH_KEYWORD';
+export const SEARCH_BOOKS = 'SEARCH_BOOK';
+export const SEARCH_BOOKS_FAILED = 'SEARCH_BOOKS_FAILED';
+export const SEARCH_BOOKS_SUCCESS = 'SEARCH_BOOKS_SUCCESS';
 export const SET_ACTIVE_BOOK = 'SET_ACTIVE_BOOK';
 
 // General constants
 export const noPhoto = 'https://books.google.com.br/googlebooks/images/no_cover_thumb.gif';
+
+// Pagination constants
 export const maxResults = 40;
 export const itemsPerPage = 10;
+export const itemsArround = 4;
 
-// Actions creators
-export const fetchBooks = () => ({
-  type: FETCH_BOOKS,
-});
-
-// dispatches a search action passing the search params
-export const searchKeyword = (keyword, title, author) => ({
-  type: SEARCH_KEYWORD,
+/*
+* searchBooks action creator
+* dispatches a search action passing the search params
+* calls the search reducer.
+*/
+export const searchBooks = (keyword, title, author, remoteStartIndex) => ({
+  type: SEARCH_BOOKS,
   keyword,
   title,
   author,
+  remoteStartIndex: Number(remoteStartIndex),
 });
 
-// dispatches the active book ID for the Book Detail screen,
+/*
+* setActiveBook action creator
+* dispatches the active book ID for the Book Detail screen,
+* calls the bookDetails reducer.
+*/
 export const setActiveBook = id => ({
   type: SET_ACTIVE_BOOK,
   id,
 });
 
-export const changePage = (pageItems, currentPage) => ({
+/*
+* changePage action creator
+* dispatches a change page action
+* calls the pagination reducer.
+*/
+export const changePage = currentPage => ({
   type: CHANGE_PAGE,
-  pageItems,
   currentPage,
+});
+
+/*
+* pullNewPages action creator
+* dispatches a pull new pages action
+* calls the search reducer.
+*/
+export const pullNewPages = remoteStartIndex => ({
+  type: PULL_NEW_PAGES,
+  remoteStartIndex,
 });
