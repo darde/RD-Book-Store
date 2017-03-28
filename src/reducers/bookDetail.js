@@ -6,7 +6,6 @@ import {
 const bookDetail = (state = '', action) => {
   switch (action.type) {
     case SET_ACTIVE_BOOK:
-      debugger;
       return action.id;
     default:
       return state;
