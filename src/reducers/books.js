@@ -1,4 +1,5 @@
 import {
+  RESET_SEARCH,
   RESULTS_NOT_FOUND,
   SEARCH_BOOKS_FAILED,
   SEARCH_BOOKS_SUCCESS,
@@ -12,6 +13,9 @@ const books = (
     case SEARCH_BOOKS_SUCCESS:
       debugger;
       return action.books;
+    case RESET_SEARCH:
+      debugger;
+      return [];
     case RESULTS_NOT_FOUND:
     case SEARCH_BOOKS_FAILED:
       debugger;

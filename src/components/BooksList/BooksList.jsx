@@ -4,6 +4,7 @@ import BookListItem from '../BookListItem/BookListItem';
 import Pagination from '../Pagination/Pagination';
 import {
   searchBooks as searchByKeyword,
+  resetSearch as startNewSearch,
 } from '../../actions';
 import './styles/styles.less';
 
@@ -16,19 +17,18 @@ class BooksList extends Component {
       subject: false,
     };
     this.toggleCheckBox = this.toggleCheckBox.bind(this);
-    this.items = [];
+    this.dispatchNewSearch = this.dispatchNewSearch.bind(this);
+    this.items = [];        // stores all books for the current page...
   }
 
   componentWillReceiveProps(nextProps) {
-    debugger;
     let startIndex,
       endIndex;
     if (this.props.books !== nextProps.books || this.props.currentPage !== nextProps.currentPage) {
       startIndex = (nextProps.currentPage - 1) * nextProps.itemsPerPage;
-      endIndex = (startIndex + nextProps.itemsPerPage) - 1;
+      endIndex = startIndex + nextProps.itemsPerPage;
       this.items = nextProps.books.slice(startIndex, endIndex);
     }
-    debugger;
   }
 
   toggleCheckBox(e) {
@@ -45,6 +45,16 @@ class BooksList extends Component {
         subject: !this.state.subject,
       });
     }
+  }
+
+  dispatchNewSearch(value) {
+    this.props.resetSearch();
+    this.props.searchBooks(
+      value,
+      this.state.title,
+      this.state.author,
+      this.state.subject,
+    );
   }
 
   render() {
@@ -101,16 +111,7 @@ class BooksList extends Component {
             autoFocus
           />
           <button
-            onClick={
-              () => {
-                this.props.searchBooks(
-                  this.input.value,
-                  this.state.title,
-                  this.state.author,
-                  this.state.subject,
-                );
-              }
-            }
+            onClick={() => { this.dispatchNewSearch(this.input.value); }}
           >
             Search
           </button>
@@ -158,10 +159,11 @@ BooksList.propTypes = {
   itemsPerPage: PropTypes.number.isRequired,
   keyword: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  resetSearch: PropTypes.func.isRequired,
+  searchBooks: PropTypes.func.isRequired,
   searchByAuthor: PropTypes.bool,
   searchByTitle: PropTypes.bool,
   totalResults: PropTypes.number.isRequired,
-  searchBooks: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -179,6 +181,7 @@ const mapDispatchToProps = dispatch => ({
   searchBooks: (keyword, title, author, remoteStartIndex) => {
     dispatch(searchByKeyword(keyword, title, author, remoteStartIndex));
   },
+  resetSearch: () => { dispatch(startNewSearch()); },
 });
 
 export default connect(

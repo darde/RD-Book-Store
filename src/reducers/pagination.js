@@ -1,6 +1,7 @@
 import {
   BUILD_PAGE,
   CHANGE_PAGE,
+  RESET_SEARCH,
   RESULTS_NOT_FOUND,
   itemsArround,
   itemsPerPage,
@@ -34,6 +35,17 @@ const pagination = (
       return Object.assign({}, state, {
         ...state,
         currentPage: action.currentPage,
+      });
+    case RESET_SEARCH:
+      debugger;
+      return Object.assign({}, state, {
+        currentPage: 1,
+        currentPull: 0,
+        pulls: [],
+        maxResults,
+        itemsPerPage,
+        itemsArround,
+        totalResults: 0,
       });
     // case PULL_NEW_PAGES:
     //   return Object.assign({}, state, {
