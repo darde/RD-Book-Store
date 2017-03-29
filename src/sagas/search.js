@@ -10,7 +10,6 @@ import {
 
 export function* searchBooks() {
   try {
-    debugger;
     const state = yield select();
     const response = yield call(search, state.search);
     const startIndex = state.search.remoteStartIndex;

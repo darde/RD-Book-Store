@@ -22,7 +22,6 @@ const pagination = (
 ) => {
   switch (action.type) {
     case BUILD_PAGE:
-      debugger;
       return Object.assign({}, state, {
         ...state,
         currentPage: action.currentPage,
@@ -31,7 +30,6 @@ const pagination = (
         totalResults: action.totalResults,
       });
     case CHANGE_PAGE:
-      debugger;
       return Object.assign({}, state, {
         ...state,
         currentPage: action.currentPage,
@@ -47,10 +45,6 @@ const pagination = (
         itemsArround,
         totalResults: 0,
       });
-    // case PULL_NEW_PAGES:
-    //   return Object.assign({}, state, {
-    //     ...state,
-    //   });
     case RESULTS_NOT_FOUND:
       return state;
     default:

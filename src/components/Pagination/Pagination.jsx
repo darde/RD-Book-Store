@@ -1,11 +1,9 @@
 /* eslint-disable react/no-unused-prop-types */
-/* eslint-disable no-unused-vars */
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import {
   changePage as callNext,
   pullNewPages as pullNew,
-  searchBooks as searchByKeyword,
 } from '../../actions';
 import './styles/styles.less';
 
@@ -29,9 +27,19 @@ class Pagination extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.totalPages = [];
+    if (nextProps.totalResults > 0) {
+      for (let i = 1; i <= Math.ceil(nextProps.totalResults / nextProps.itemsPerPage); i += 1) {
+        this.totalPages.push(i);
+      }
+    }
     this.buildPageButtons(nextProps);
   }
 
+  /*
+  * buildPageButtons      builds the navbar pagination buttons...
+  * @param      props     this.props
+  */
   buildPageButtons(props) {
     let startIndex,
       endIndex;
@@ -42,22 +50,41 @@ class Pagination extends Component {
         endIndex = (2 * props.itemsArround) + 2;
       } else {
         startIndex = props.currentPage - props.itemsArround;
-        endIndex = props.currentPage + props.itemsArround;
+        endIndex = props.currentPage + props.itemsArround + 1;
       }
     } else {
       startIndex = 1;
-      endIndex = this.totalPages.length;
+      endIndex = this.totalPages.length + 1;
     }
     for (let i = startIndex; i < endIndex; i += 1) {
       this.buttonPages.push(i);
     }
   }
 
+  /*
+  * changePage      dispatches a change page action
+  * @param  page    { -1: decrease page by one, 0: increase page by one, n: go to page n }
+  */
   changePage(page) {
-    this.props.changePage(page);
-    this.checkPullRequest(this.props, page);
+    const lastPage = Math.ceil(this.props.totalResults / this.props.itemsPerPage);
+    if (page > 0) {
+      this.props.changePage(page);
+      this.checkPullRequest(this.props, page);
+    } else if (page === 0 && page < lastPage) {
+      this.props.changePage(this.props.currentPage + 1);
+      this.checkPullRequest(this.props, this.props.currentPage + 1);
+    } else if (page === -1 && this.props.currentPage > 1) {
+      this.props.changePage(this.props.currentPage - 1);
+      this.checkPullRequest(this.props, this.props.currentPage - 1);
+    }
   }
 
+  /*
+  * checkPullRequest      checks if the required page was already pulled...
+  * if no, call dispatch the pullNewPages action...
+  * @param    props     this.props
+  * @param    _page     the page triggered
+  */
   checkPullRequest(props, _page) {
     const currentPage = _page || props.currentPage;
     const pullRequested =
@@ -78,7 +105,10 @@ class Pagination extends Component {
   render() {
     return (
       <div className='pagination'>
-        <button>
+        <button
+          onClick={() => { this.changePage(-1); }}
+          disabled={this.props.currentPage === 1}
+        >
           Previous
         </button>
         <div className='pages'>
@@ -108,7 +138,12 @@ class Pagination extends Component {
             )
           }
         </div>
-        <button>
+        <button
+          onClick={() => { this.changePage(0); }}
+          disabled={
+            this.props.currentPage === Math.ceil(this.props.totalResults / this.props.itemsPerPage)
+          }
+        >
           Next
         </button>
       </div>
@@ -120,36 +155,26 @@ Pagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   itemsArround: PropTypes.number.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
-  keyword: PropTypes.string.isRequired,
   maxResults: PropTypes.number.isRequired,
   pulls: PropTypes.arrayOf(PropTypes.shape).isRequired,
   pullNewPages: PropTypes.func.isRequired,
   remoteStartIndex: PropTypes.number.isRequired,
-  searchByAuthor: PropTypes.bool.isRequired,
-  searchByTitle: PropTypes.bool.isRequired,
   totalResults: PropTypes.number.isRequired,
   changePage: PropTypes.func.isRequired,
-  searchKeyword: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   currentPage: state.pagination.currentPage,
   itemsArround: state.pagination.itemsArround,
   itemsPerPage: state.pagination.itemsPerPage,
-  keyword: state.search.keyword,
   maxResults: state.pagination.maxResults,
   pulls: state.pagination.pulls,
   remoteStartIndex: state.search.remoteStartIndex,
-  searchByAuthor: state.search.author,
-  searchByTitle: state.search.title,
   totalResults: state.pagination.totalResults,
 });
 
 const mapDispatchToProps = dispatch => ({
   changePage: (page) => { dispatch(callNext(page)); },
-  searchKeyword: (keyword, title, author, remoteStartIndex) => {
-    dispatch(searchByKeyword(keyword, title, author, remoteStartIndex));
-  },
   pullNewPages: (startIndex) => { dispatch(pullNew(startIndex)); },
 });
 

@@ -11,14 +11,10 @@ const books = (
  ) => {
   switch (action.type) {
     case SEARCH_BOOKS_SUCCESS:
-      debugger;
       return action.books;
     case RESET_SEARCH:
-      debugger;
-      return [];
     case RESULTS_NOT_FOUND:
     case SEARCH_BOOKS_FAILED:
-      debugger;
       return [];
     default:
       return state;
