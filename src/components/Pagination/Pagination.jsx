@@ -30,11 +30,6 @@ class Pagination extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.buildPageButtons(nextProps);
-    // this.checkPullRequest(nextProps);
-    // debugger;
-    // if (this.props !== nextProps) {
-    //   this.checkPullRequest(nextProps);
-    // }
   }
 
   buildPageButtons(props) {
@@ -56,7 +51,6 @@ class Pagination extends Component {
     for (let i = startIndex; i < endIndex; i += 1) {
       this.buttonPages.push(i);
     }
-    // debugger;
   }
 
   changePage(page) {
@@ -65,7 +59,6 @@ class Pagination extends Component {
   }
 
   checkPullRequest(props, _page) {
-    debugger;
     const currentPage = _page || props.currentPage;
     const pullRequested =
       (Math.ceil(currentPage / (props.maxResults / props.itemsPerPage))) - 1;
@@ -80,7 +73,6 @@ class Pagination extends Component {
       const remoteStartIndex = pullRequested * props.maxResults;
       props.pullNewPages(remoteStartIndex);
     }
-    debugger;
   }
 
   render() {

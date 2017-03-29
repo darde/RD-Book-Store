@@ -3,6 +3,7 @@ export const BUILD_PAGE = 'BUILD_PAGE';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 // export const FETCH_BOOKS = 'FETCH_BOOKS';
 export const PULL_NEW_PAGES = 'PULL_NEW_PAGES';
+export const RESET_SEARCH = 'RESET_SEARCH';
 export const RESULTS_NOT_FOUND = 'RESULTS_NOT_FOUND';
 export const SEARCH_BOOKS = 'SEARCH_BOOK';
 export const SEARCH_BOOKS_FAILED = 'SEARCH_BOOKS_FAILED';
@@ -58,4 +59,8 @@ export const changePage = currentPage => ({
 export const pullNewPages = remoteStartIndex => ({
   type: PULL_NEW_PAGES,
   remoteStartIndex,
+});
+
+export const resetSearch = () => ({
+  type: RESET_SEARCH,
 });
