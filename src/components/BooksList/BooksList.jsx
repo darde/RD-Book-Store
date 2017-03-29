@@ -24,10 +24,15 @@ class BooksList extends Component {
   componentWillReceiveProps(nextProps) {
     let startIndex,
       endIndex;
-    if (this.props.books !== nextProps.books || this.props.currentPage !== nextProps.currentPage) {
-      startIndex = (nextProps.currentPage - 1) * nextProps.itemsPerPage;
-      endIndex = startIndex + nextProps.itemsPerPage;
-      this.items = nextProps.books.slice(startIndex, endIndex);
+    if (!nextProps.loading) {
+      if (
+          this.props.books !== nextProps.books ||
+          this.props.currentPage !== nextProps.currentPage
+        ) {
+        startIndex = (nextProps.currentPage - 1) * nextProps.itemsPerPage;
+        endIndex = startIndex + nextProps.itemsPerPage;
+        this.items = nextProps.books.slice(startIndex, endIndex);
+      }
     }
   }
 

@@ -35,6 +35,7 @@ const search = (
       return Object.assign({}, state, {
         ...state,
         remoteStartIndex: action.remoteStartIndex,
+        loading: true,
       });
     default:
       return state;
