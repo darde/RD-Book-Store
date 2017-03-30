@@ -24,5 +24,6 @@ module.exports = {
       "react/no-array-index-key": 0,
       "no-debugger": "warn",
       "react/require-default-props": 0,
+      "eqeqeq": 0,
     },
 };
