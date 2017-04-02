@@ -1,9 +1,15 @@
 import React from 'react';
 import BooksList from './BooksList/BooksList';
+import Brand from './Brand/Brand';
+import InputSearch from './InputSearch/InputSearch';
+import BookDetail from './BookDetail/BookDetail';
+import '../styles/main.less';
 
 const Home = () => (
-  <div>
-    <h1>Hello Book Store</h1>
+  <div className='spa'>
+    <BookDetail />
+    <Brand />
+    <InputSearch />
     <BooksList />
   </div>
 );

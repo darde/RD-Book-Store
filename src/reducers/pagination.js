@@ -35,7 +35,6 @@ const pagination = (
         currentPage: action.currentPage,
       });
     case RESET_SEARCH:
-      debugger;
       return Object.assign({}, state, {
         currentPage: 1,
         currentPull: 0,

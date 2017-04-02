@@ -26,6 +26,7 @@ export function* searchBooks() {
       }
     }
     response.items.map((item, idx) => {
+      item.volumeInfo.favorite = false;
       books.splice(startIndex + idx, 1, item);
     });
     const currentPull = Math.ceil(startIndex / maxResults);

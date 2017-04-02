@@ -1,65 +1,85 @@
+/* eslint-disable react/no-unused-prop-types */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import BookListItem from '../BookListItem/BookListItem';
 import Pagination from '../Pagination/Pagination';
-import {
-  searchBooks as searchByKeyword,
-  resetSearch as startNewSearch,
-} from '../../actions';
+import Spinner from '../Spinner/Spinner';
 import './styles/styles.less';
+import {
+  toggleFavorite as toogleFavBook,
+} from '../../actions';
 
 class BooksList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: true,
-      author: false,
-      subject: false,
+      bgPaperStyle: 'bg-paper',
     };
-    this.toggleCheckBox = this.toggleCheckBox.bind(this);
-    this.dispatchNewSearch = this.dispatchNewSearch.bind(this);
     this.items = [];        // stores all books for the current page...
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     let startIndex,
+      midIndex,
       endIndex;
-    if (!nextProps.loading) {
-      if (
-          this.props.books !== nextProps.books ||
-          this.props.currentPage !== nextProps.currentPage
-        ) {
-        startIndex = (nextProps.currentPage - 1) * nextProps.itemsPerPage;
-        endIndex = startIndex + nextProps.itemsPerPage;
-        this.items = nextProps.books.slice(startIndex, endIndex);
+    let localStorageFavorites = [];
+    if (nextProps.uiOpacity > 0) {
+      this.setState({
+        bgPaperStyle: 'bg-paper opacity-1',
+      });
+      if (!nextProps.loading) {
+        if (window.localStorage.getItem('favorites')) {
+          localStorageFavorites = JSON.parse(window.localStorage.getItem('favorites'));
+          localStorageFavorites.map((_item) => {
+            nextProps.books.map((book) => {
+              if (_item === book.id) {
+                book.volumeInfo.favorite = true;
+              }
+            });
+          });
+        }
+        if (
+            this.props.books !== nextProps.books ||
+            this.props.currentPage !== nextProps.currentPage
+          ) {
+          startIndex = (nextProps.currentPage - 1) * nextProps.itemsPerPage;
+          midIndex = startIndex + (nextProps.itemsPerPage / 2);
+          endIndex = midIndex + (nextProps.itemsPerPage / 2);
+          this.items[0] = nextProps.books.slice(startIndex, midIndex);
+          this.items[1] = nextProps.books.slice(midIndex, endIndex);
+        }
       }
     }
   }
 
-  toggleCheckBox(e) {
-    if (e.target.id === 'title') {
-      this.setState({
-        title: !this.state.title,
-      });
-    } else if (e.target.id === 'author') {
-      this.setState({
-        author: !this.state.author,
-      });
-    } else if (e.target.id === 'subject') {
-      this.setState({
-        subject: !this.state.subject,
-      });
+  toggleFavorite(_id) {
+    const _books = this.props.books.slice();
+    _books.some((book) => {
+      if (book.id === _id) {
+        book.volumeInfo.favorite = !book.volumeInfo.favorite;
+        return true;
+      }
+      return false;
+    });
+    // add/remove to/from localStorage...
+    if (window.localStorage.getItem('favorites')) {
+      const localStorageFav = JSON.parse(window.localStorage.getItem('favorites'));
+      let newLocalFav = [];
+      // if the favorite is already in localStorage, remove it
+      if (localStorageFav.filter(item => item === _id).length > 0) {
+        newLocalFav = localStorageFav.filter(item => item !== _id);
+        window.localStorage.setItem('favorites', JSON.stringify(newLocalFav));
+      } else {
+        // if the favorite is not in localStorage, add it
+        localStorageFav.push(_id);
+        window.localStorage.setItem('favorites', JSON.stringify(localStorageFav));
+      }
+    } else {
+      // if localStorage is not set yet...
+      window.localStorage.setItem('favorites', JSON.stringify([_id]));
     }
-  }
-
-  dispatchNewSearch(value) {
-    this.props.resetSearch();
-    this.props.searchBooks(
-      value,
-      this.state.title,
-      this.state.author,
-      this.state.subject,
-    );
+    this.props.toggleFavorite(_books);
   }
 
   render() {
@@ -69,7 +89,7 @@ class BooksList extends Component {
       _of;
     switch (this.props.totalResults) {
       case 0:
-        labelFound = 'No results found.';
+        labelFound = !this.props.loading && 'No results were found.';
         break;
       case 1:
         labelFound = '1 result found.';
@@ -79,80 +99,58 @@ class BooksList extends Component {
           (this.props.currentPage * this.props.itemsPerPage) - (this.props.itemsPerPage - 1);
         endIndex = this.props.currentPage * this.props.itemsPerPage;
         _of = endIndex < this.props.totalResults ? endIndex : this.props.totalResults;
-        labelFound = `Showing ${startIndex} of ${_of} from ${this.props.totalResults} results found.`;
+        labelFound = `Showing ${startIndex} to ${_of} from ${this.props.totalResults} results found.`;
         break;
     }
     return (
-      <div>
-        <header>
-          <h1>Books</h1>
-          <h2>{labelFound}</h2>
-        </header>
-        <div className='search-books'>
-          <label htmlFor='search'>Search for keyword</label>
-          <div className='checkbox'>
-            <input
-              type='checkbox'
-              id='title'
-              checked={this.state.title}
-              onChange={this.toggleCheckBox}
-            />
-            <label htmlFor='title'>By Title</label>
-          </div>
-          <div className='checkbox'>
-            <input
-              type='checkbox'
-              id='author'
-              checked={this.state.author}
-              onChange={this.toggleCheckBox}
-            />
-            <label htmlFor='author'>By Author</label>
-          </div>
-          <input
-            type='text'
-            placeholder='Type a keyword'
-            defaultValue={this.props.keyword}
-            ref={(input) => { this.input = input; }}
-            autoFocus
-          />
-          <button
-            onClick={() => { this.dispatchNewSearch(this.input.value); }}
-          >
-            Search
-          </button>
-        </div>
-        {
-          this.items.length > 0 ? (
-            <div>
-              <ul>
+      <div className='book-list'>
+        <div className={this.state.bgPaperStyle}>
+          <header>
+            <span className='label-found'>{labelFound}</span>
+          </header>
+          {
+            this.items.length > 0 && !this.props.loading ? (
+              <div>
                 {
-                  this.items.map((book, idx) =>
-                    <li key={idx}>
-                      <BookListItem
-                        id={book.id}
-                        title={book.volumeInfo.title || ''}
-                        smallThumbnail={
-                          book.volumeInfo.imageLinks ?
-                            book.volumeInfo.imageLinks.smallThumbnail : ''
-                        }
-                        keyword={this.props.keyword}
-                        authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
-                        publishedDate={
-                          book.volumeInfo.publishedDate ?
-                            book.volumeInfo.publishedDate :
-                            'not available'
-                        }
-                        searchByTitle={this.props.searchByTitle}
-                        searchByAuthor={this.props.searchByAuthor}
-                      />
-                    </li>,
+                  this.items.map((_ul, i) =>
+                    <ul key={i} className={i === 0 ? 'book-cards' : 'book-cards right'}>
+                      {
+                        _ul.map((book, idx) =>
+                          <li key={idx}>
+                            <BookListItem
+                              id={book.id}
+                              favorite={book.volumeInfo.favorite}
+                              title={book.volumeInfo.title || ''}
+                              description={
+                                book.volumeInfo.description ?
+                                  book.volumeInfo.description : 'Description not available'
+                              }
+                              smallThumbnail={
+                                book.volumeInfo.imageLinks ?
+                                  book.volumeInfo.imageLinks.smallThumbnail : ''
+                              }
+                              keyword={this.props.keyword}
+                              authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
+                              publishedDate={
+                                book.volumeInfo.publishedDate ?
+                                  book.volumeInfo.publishedDate :
+                                  'Published date not available'
+                              }
+                              searchByTitle={this.props.searchByTitle}
+                              searchByAuthor={this.props.searchByAuthor}
+                              toggleFavorite={this.toggleFavorite}
+                            />
+                          </li>,
+                        )
+                      }
+                    </ul>,
                   )
                 }
-              </ul>
-              <Pagination />
-            </div>
-          ) : <div>{this.props.loading}</div>
-        }
+                <Pagination />
+              </div>
+            ) : <Spinner />
+          }
+        </div>
       </div>
     );
   }
@@ -164,11 +162,11 @@ BooksList.propTypes = {
   itemsPerPage: PropTypes.number.isRequired,
   keyword: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
-  resetSearch: PropTypes.func.isRequired,
-  searchBooks: PropTypes.func.isRequired,
   searchByAuthor: PropTypes.bool,
   searchByTitle: PropTypes.bool,
+  toggleFavorite: PropTypes.func.isRequired,
   totalResults: PropTypes.number.isRequired,
+  uiOpacity: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -180,13 +178,11 @@ const mapStateToProps = state => ({
   searchByAuthor: state.search.author,
   searchByTitle: state.search.title,
   totalResults: state.pagination.totalResults,
+  uiOpacity: state.ui,
 });
 
 const mapDispatchToProps = dispatch => ({
-  searchBooks: (keyword, title, author, remoteStartIndex) => {
-    dispatch(searchByKeyword(keyword, title, author, remoteStartIndex));
-  },
-  resetSearch: () => { dispatch(startNewSearch()); },
+  toggleFavorite: (books) => { dispatch(toogleFavBook(books)); },
 });
 
 export default connect(
