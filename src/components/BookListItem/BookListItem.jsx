@@ -9,7 +9,7 @@ import './styles/styles.less';
 
 const styles = {
   bookCard: {
-    width: 400,
+    width: 440,
     height: 200,
   },
 };
