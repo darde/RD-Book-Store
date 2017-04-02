@@ -12,6 +12,7 @@ const search = (
     author: false,
     loading: false,
     error: null,
+    firstSearch: true,
   },
   action,
 ) => {
@@ -23,6 +24,7 @@ const search = (
         title: action.title,
         author: action.author,
         loading: true,
+        firstSearch: false,
         remoteStartIndex: action.remoteStartIndex,
       });
     case SEARCH_BOOKS_SUCCESS:

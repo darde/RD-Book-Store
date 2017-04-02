@@ -1,0 +1,53 @@
+@import '../../../styles/variables.less';
+
+.brand {
+  /* position: absolute;
+  z-index: 10; */
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: @max-width-component;
+  margin: 0 auto;
+  height: 80px;
+  padding: 20px 0 45px 0;
+  border-bottom: 1px solid rgba(77,106,128,.3);
+
+  &.opacity-1 {
+    background: #fff;
+  }
+  
+  .logo, .lettering, header, figure {
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+    padding: 0;
+    margin-right: 5px;
+    line-height: 0;
+
+    img, span {
+      display: inline-flex;
+    }
+  }
+
+  .lettering {
+    header {
+      align-items: flex-end;
+      .bold {
+        margin: 0;
+        font: normal 32px 'robotobold';
+        color: #4d6a80;
+      }
+
+      .light {
+        font: normal 32px 'robotolight';
+        color: #686969;
+      }
+
+      h1 {
+        margin: 0;
+      }
+    }
+  }
+}
