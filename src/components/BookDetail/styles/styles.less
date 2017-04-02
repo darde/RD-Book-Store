@@ -1,0 +1,147 @@
+.book-detail {
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  width: 100%;
+  height: 0;
+  background: transparent;
+  transition: background 0.5s;
+
+  &.visible {
+    position: absolute;
+    z-index: 20;
+    height: 100%;
+    background: rgba(0,0,0,.4);
+  }
+
+  .detail-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 97%;
+    padding: 20px;
+
+    figure {
+      float: left;
+      width: 128px;
+      height: 188px;
+      margin: 0 40px 0 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        box-shadow: 1px 1px 2px rgba(0,0,0,.2);
+      }
+    }
+    
+    .detail-content {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      height: 300px;
+      padding: 0 0 30px 40px;
+      border-left: 1px solid rgba(0,0,0,.2);
+      box-sizing: border-box;
+
+      h1, ul, div {
+        display: flex;
+      }
+
+      h1 {
+        margin: 0;
+        font: normal 24px 'robotolight';
+        color: #333;
+      }
+
+      ul.authors, ul.rating {
+        margin: 0;
+        padding: 0;
+        
+        li {
+          float: left;
+          margin: 0;
+          list-style-type: none;
+          font: normal 18px 'robotolight_italic';
+
+          &:after {
+            content: ', ';
+            white-space: pre;
+          }
+
+          &:last-child:after {
+            content: '';
+          }
+        }
+      }
+
+      .author {
+        margin: 0;
+        font: normal 18px 'robotolight_italic';
+      }
+
+      ul.rating {
+        width: 160px;
+
+        li {
+          float: left;
+          width: 20px;
+          margin-right: 5px;
+          line-height: 0;
+
+          i {
+            color: #cea100;
+          }
+
+          &:after {
+            content: '';
+          }
+        }
+      }
+
+      .published-date, .publisher, .page-count, .identifier {
+        margin: 0;
+        font: normal 18px 'robotoitalic';
+        color: #4d6a80;
+      }
+
+      .publisher, .page-count {
+        color: #ce4f00;
+
+        i {
+          margin-right: 5px;
+        }
+      }
+
+      .page-count {
+        color: #007561;
+      }
+
+      .identifier {
+        font: normal 16px 'robotoitalic';
+      }
+    }
+  }
+
+  .detail-content-wide {
+    border-top: 1px solid rgba(0,0,0,.2);
+    h2 {
+      font: normal 20px 'robotoitalic';
+    }
+
+    .description {
+      margin: 0 auto;
+      width: 95%;
+      height: 360px;
+      overflow-y: auto;
+      overflow-x: hidden; 
+
+      p {
+        font: normal 16px 'robotolight';
+        line-height: 24px;
+      }
+    }
+  }
+
+}

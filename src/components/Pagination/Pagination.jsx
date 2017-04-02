@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   changePage as callNext,
   pullNewPages as pullNew,
@@ -104,48 +105,57 @@ class Pagination extends Component {
 
   render() {
     return (
-      <div className='pagination'>
-        <button
-          onClick={() => { this.changePage(-1); }}
-          disabled={this.props.currentPage === 1}
-        >
-          Previous
-        </button>
-        <div className='pages'>
-          {
-            this.totalPages.length > 0 && (
-              <ul>
-                {
-                  this.totalPages.map((page, idx) =>
-                    <li
-                      key={idx}
-                      className={
-                        idx + 1 < this.buttonPages[0] ||
-                        idx + 1 > this.buttonPages[this.buttonPages.length - 1] ? 'hidden' : ''
-                      }
-                    >
-                      <button
-                        className={this.props.currentPage === idx + 1 ? 'active' : ''}
-                        onClick={() => { this.changePage(idx + 1); }}
-                        disabled={this.props.currentPage === idx + 1}
+      <div>
+        {
+          this.totalPages.length > 0 && (
+            <div className='pagination'>
+              <RaisedButton
+                label='Previous'
+                labelStyle={{ textTransform: 'inherit', padding: 0 }}
+                disabled={this.props.currentPage === 1}
+                fullWidth={false}
+                style={{ minWidth: 70 }}
+                onClick={() => { this.changePage(-1); }}
+              />
+              <div className='pages'>
+                <ul>
+                  {
+                    this.totalPages.map((page, idx) =>
+                      <li
+                        key={idx}
+                        className={
+                          idx + 1 < this.buttonPages[0] ||
+                          idx + 1 > this.buttonPages[this.buttonPages.length - 1] ? 'hidden' : ''
+                        }
                       >
-                        {page}
-                      </button>
-                    </li>,
-                  )
+                        <RaisedButton
+                          label={page}
+                          labelStyle={{ textTransform: 'inherit', padding: 0 }}
+                          disabled={this.props.currentPage === idx + 1}
+                          fullWidth={false}
+                          primary
+                          style={{ minWidth: 40 }}
+                          onClick={() => { this.changePage(idx + 1); }}
+                        />
+                      </li>,
+                    )
+                  }
+                </ul>
+              </div>
+              <RaisedButton
+                label='Next'
+                disabled={
+                  this.props.currentPage === Math.ceil(
+                    this.props.totalResults / this.props.itemsPerPage)
                 }
-              </ul>
-            )
-          }
-        </div>
-        <button
-          onClick={() => { this.changePage(0); }}
-          disabled={
-            this.props.currentPage === Math.ceil(this.props.totalResults / this.props.itemsPerPage)
-          }
-        >
-          Next
-        </button>
+                labelStyle={{ textTransform: 'inherit', padding: 0 }}
+                fullWidth={false}
+                style={{ minWidth: 70 }}
+                onClick={() => { this.changePage(0); }}
+              />
+            </div>
+          )
+        }
       </div>
     );
   }
@@ -155,6 +165,7 @@ Pagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   itemsArround: PropTypes.number.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
+  loading: PropTypes.bool.isRequired,
   maxResults: PropTypes.number.isRequired,
   pulls: PropTypes.arrayOf(PropTypes.shape).isRequired,
   pullNewPages: PropTypes.func.isRequired,
@@ -167,6 +178,7 @@ const mapStateToProps = state => ({
   currentPage: state.pagination.currentPage,
   itemsArround: state.pagination.itemsArround,
   itemsPerPage: state.pagination.itemsPerPage,
+  loading: state.search.loading,
   maxResults: state.pagination.maxResults,
   pulls: state.pagination.pulls,
   remoteStartIndex: state.search.remoteStartIndex,
