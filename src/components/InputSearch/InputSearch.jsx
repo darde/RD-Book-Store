@@ -39,11 +39,29 @@ class InputSearch extends Component {
         opacity: 1,
         transition: 'opacity 0.5s',
       },
+      errorText: '',
     };
     this.input = null;
     this.toggleCheckBox = this.toggleCheckBox.bind(this);
     this.dispatchNewSearch = this.dispatchNewSearch.bind(this);
     this.animateSearch = this.animateSearch.bind(this);
+    this.validateFields = this.validateFields.bind(this);
+  }
+
+  validateFields(value) {
+    debugger;
+    if (value !== '' && (this.state.author || this.state.title)) {
+      return true;
+    } else if (!this.state.title && !this.state.author) {
+      this.setState({
+        errorText: 'Select at least one filter (Title or Author)',
+      });
+    } else {
+      this.setState({
+        errorText: 'This field is required',
+      });
+    }
+    return false;
   }
 
   toggleCheckBox(e) {
@@ -63,25 +81,30 @@ class InputSearch extends Component {
   }
 
   dispatchNewSearch(value) {
-    this.props.toggleResultsOpacity();
-    this.props.resetSearch();
-    this.props.searchBooks(
-      value,
-      this.state.title,
-      this.state.author,
-      this.state.subject,
-    );
+    if (this.validateFields(value)) {
+      this.props.toggleResultsOpacity();
+      this.props.resetSearch();
+      this.props.searchBooks(
+        value,
+        this.state.title,
+        this.state.author,
+        this.state.subject,
+      );
+    }
   }
 
   animateSearch(value) {
-    this.setState({
-      paperStyle: {
-        ...this.state.paperStyle,
-        opacity: 0,
-      },
-      searchBoxstyle: 'input-search top-position',
-    });
-    this.dispatchNewSearch(value);
+    if (this.validateFields(value)) {
+      this.setState({
+        paperStyle: {
+          ...this.state.paperStyle,
+          opacity: 0,
+        },
+        errorText: '',
+        searchBoxstyle: 'input-search top-position',
+      });
+      this.dispatchNewSearch(value);
+    }
   }
 
   render() {
@@ -96,6 +119,7 @@ class InputSearch extends Component {
               ref={(input) => { this.input = input; }}
               autoFocus
               hintText='Type a keyword'
+              errorText={this.state.errorText}
               floatingLabelText='Search for keyword'
               style={styles.textField}
             />
