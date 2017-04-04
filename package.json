@@ -1,6 +1,6 @@
 {
   "name": "rd-book-store",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "engines": {
     "node": "7.0.0",
     "npm": "3.10.8"
@@ -42,10 +42,12 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "material-ui": "^0.17.1",
     "react": "^15.3.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-saga": "^0.14.3"
   }

@@ -1,31 +1,43 @@
-# phaser-webpack-es6
+# Book Store Resultados Digitais
 
-A simple **Phaser Webpack ES6 boilerplate**.
+## Your digital bookshelf on the web
 
-If you like to develop with [webpack][webpackSite], then this package can be your starting point for [Phaser][phaserSite] projects.
+1. [About](#about)
+2. [Usage](#usage)
+3. [Project Structure](#project-structure)
+4. [Browser Compatibility](#browser-compatibility)
+5. [Automated Tests](#automated-tests)
 
-If you like to develop with webpack and publish in [Heroku][herokuSite], this can be also your starting point project.
+### About
+This is an open source project that aims facilitate the search of books by people on [Google Books API][GoogleBooks]. Basically, this app gives the user a custom experience which it is possible to search, read and bookmark his books.
 
-## Project Structure
+### Usage
+Anyone can clone this repo and collaborate to either improve the actual features or create new ones. In order to develop this project, you will the following requirements.
 
-This project runs a [webpack-dev-server][webpackDevServerSite] for development, and runs an express server to deploy on heroku. If you want to deploy your project on your heroku account, the only thing you need to do is type `git push heroku yourproject`. You can edit any file under the `src` directory.
+1. clone this repo, or fork it.
+2. Make sure you have both [NodeJS][node] and [npm][npm] installed.
+3. In a terminal, in the project root directory, run `npm install`.
+4. After install the dependencies, run `npm run watch`.
+5. Open your browser and visit [http://localhost:5000/](http://localhost:5000/)
 
-## Project Setup
+You will see the Book Store Home page. Now, you can open your editor and start coding. Every time you save some file, eslint will check your code. If all its right, the browser will reload the page.
 
-1. Clone or download the project.
-2. The entry file is **/src/js/main.js**. You can overwrite this.
-3. Run `npm run dev` and visit [http://localhost:5000](http://localhost:5000).
+### Project Structure
+This project is built up with front end technologies such as [NodeJS][node] and [React][react]. For development uses [Eslint code checker][eslint] and [Webpack][webpack] task runner. The application architecture pattern chosen was [Redux][redux], which is a Unidirectional Data Flow pattern. For automated tests, not implemented yet, the project will use [Jest][jest] altogether with [Airbnb enzyme][enzyme], a test utility for React applications. This application works with **Continuous Integration** on [Heroku][heroku], which is automatically deployed every time a new merge is made on master branch. You can check this app on [https://rd-book-store.herokuapp.com/#/](https://rd-book-store.herokuapp.com/#/).
 
-[webpackSite]:https://webpack.github.io/
-[phaserSite]:https://phaser.io/
-[herokuSite]:https://www.heroku.com/
-[webpackDevServerSite]:https://webpack.github.io/docs/webpack-dev-server.html
+### Browser Compatibility
+This release version (1.0.0) uses [Flexible Box Layout](http://caniuse.com/#feat=flexbox), which is compatible with [Firefox 51](https://www.mozilla.org/en-US/firefox/51.0/releasenotes/), [Internet Explorer 11](https://www.microsoft.com/pt-br/download/Internet-Explorer-11-for-Windows-7-details.aspx), [Microsoft Edge](https://www.microsoft.com/pt-br/windows/microsoft-edge), [Chrome 55](https://www.google.com/chrome/browser/desktop/index.html) and modern mobile browsers. The next stable version should brings flex box fallback for old browsers, and a responsive version for small screens.
 
-## License
+### Automated Tests
+Automated tests comming soon with Jest and Airbnb enzyme on next minor release.
 
-This project is totally free for your use.
-
-Any included software are copyright to their respective authors and mostly under MIT or [SIL OFL][silOfl].
-
-
-
+[GoogleBooks]: https://books.google.com/
+[node]: https://nodejs.org/en/
+[npm]: https://www.npmjs.com/
+[react]: https://facebook.github.io/react/
+[enzyme]: https://github.com/airbnb/enzyme
+[jest]: https://facebook.github.io/jest/
+[redux]: http://redux.js.org/
+[webpack]: https://webpack.github.io/
+[eslint]: http://eslint.org/
+[heroku]: https://www.heroku.com/
