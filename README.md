@@ -17,7 +17,7 @@ Anyone can clone this repo and collaborate to either improve the actual features
 2. Make sure you have both [NodeJS][node] and [npm][npm] installed.
 3. In a terminal, in the project root directory, run `npm install`.
 4. After install the dependencies, run `npm run watch`.
-5. Open your browser and visit [http://localhost:5000/][http://localhost:5000/]
+5. Open your browser and visit [http://localhost:5000/](http://localhost:5000/)
 
 You will see the Book Store Home page. Now, you can open your editor and start coding. Every time you save some file, eslint will check your code. If all its right, the browser will reload the page.
 
