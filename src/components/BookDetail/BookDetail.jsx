@@ -77,9 +77,13 @@ class BookDetail extends Component {
                     />
                   </figure>
                   <div className='detail-content'>
-                    <a href={book.volumeInfo.previewLink} title='Go to preview'>
-                      {book.volumeInfo.previewLink}
-                    </a>
+                    {
+                      book.volumeInfo.previewLink ? (
+                        <a href={book.volumeInfo.previewLink} title='Go to preview'>
+                          {book.volumeInfo.previewLink}
+                        </a>
+                      ) : <span>Preview link not available</span>
+                    }
                     <h1>{book.volumeInfo.title}</h1>
                     {
                       book.volumeInfo.authors && book.volumeInfo.authors.length > 0 ? (
@@ -121,10 +125,14 @@ class BookDetail extends Component {
                       }
                     </div>
                     <div className='page-count'>Pages: {book.volumeInfo.pageCount}</div>
-                    <div className='identifier'>
-                      Identifier: {`${book.volumeInfo.industryIdentifiers[0].type}:
-                       ${book.volumeInfo.industryIdentifiers[0].identifier}`}
-                    </div>
+                    {
+                      book.volumeInfo.industryIdentifiers ? (
+                        <div className='identifier'>
+                          Identifier: {`${book.volumeInfo.industryIdentifiers[0].type}:
+                          ${book.volumeInfo.industryIdentifiers[0].identifier}`}
+                        </div>
+                      ) : <div className='identifier'>Book identifier not available.</div>
+                    }
                   </div>
                   <div className='detail-content-wide'>
                     <h2>Description</h2>
