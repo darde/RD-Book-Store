@@ -1,6 +1,6 @@
 # Book Store Resultados Digitais
 
-## Your digital shelf on the internet
+## Your digital bookshelf on the web
 
 1. [About](#about)
 2. [Usage](#usage)
