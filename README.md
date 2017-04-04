@@ -8,13 +8,13 @@
 4. [Automated Tests](#automated-tests)
 
 ### About
-This is an open source project that aims facilitate the search of books by people on [Google Books API][GoogleBooks]. Basically this app gives the user a custom experience where it is possible to search, read and bookmark his books.
+This is an open source project that aims facilitate the search of books by people on [Google Books API](GoogleBooks). Basically this app gives the user a custom experience where it is possible to search, read and bookmark his books.
 
 ### Usage
 Anyone can clone this repo and collaborate to either improve the actual features or create new ones. In order to develop with this project you will the following requirements.
 
 1. clone this repo, or fork it.
-2. Make sure you have both [NodeJS][node] and [npm][npm] installed.
+2. Make sure you have both [NodeJS](node) and [npm](npm) installed.
 3. In a terminal, inside the project root directory, type `npm install`.
 4. After install the dependencies, type `npm run watch`.
 5. Open your browser and visit [http://localhost:5000/](http://localhost:5000/)
