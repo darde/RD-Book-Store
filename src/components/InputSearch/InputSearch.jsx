@@ -49,7 +49,6 @@ class InputSearch extends Component {
   }
 
   validateFields(value) {
-    debugger;
     if (value !== '' && (this.state.author || this.state.title)) {
       return true;
     } else if (!this.state.title && !this.state.author) {

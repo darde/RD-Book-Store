@@ -111,41 +111,43 @@ class BooksList extends Component {
           {
             this.items.length > 0 && !this.props.loading ? (
               <div>
-                {
-                  this.items.map((_ul, i) =>
-                    <ul key={i} className={i === 0 ? 'book-cards' : 'book-cards right'}>
-                      {
-                        _ul.map((book, idx) =>
-                          <li key={idx}>
-                            <BookListItem
-                              id={book.id}
-                              favorite={book.volumeInfo.favorite}
-                              title={book.volumeInfo.title || ''}
-                              description={
-                                book.volumeInfo.description ?
-                                  book.volumeInfo.description : 'Description not available'
-                              }
-                              smallThumbnail={
-                                book.volumeInfo.imageLinks ?
-                                  book.volumeInfo.imageLinks.smallThumbnail : ''
-                              }
-                              keyword={this.props.keyword}
-                              authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
-                              publishedDate={
-                                book.volumeInfo.publishedDate ?
-                                  book.volumeInfo.publishedDate :
-                                  'Published date not available'
-                              }
-                              searchByTitle={this.props.searchByTitle}
-                              searchByAuthor={this.props.searchByAuthor}
-                              toggleFavorite={this.toggleFavorite}
-                            />
-                          </li>,
-                        )
-                      }
-                    </ul>,
-                  )
-                }
+                <div className='list-container'>
+                  {
+                    this.items.map((_ul, i) =>
+                      <ul key={i} className={i === 0 ? 'book-cards' : 'book-cards right'}>
+                        {
+                          _ul.map((book, idx) =>
+                            <li key={idx}>
+                              <BookListItem
+                                id={book.id}
+                                favorite={book.volumeInfo.favorite}
+                                title={book.volumeInfo.title || ''}
+                                description={
+                                  book.volumeInfo.description ?
+                                    book.volumeInfo.description : 'Description not available'
+                                }
+                                smallThumbnail={
+                                  book.volumeInfo.imageLinks ?
+                                    book.volumeInfo.imageLinks.smallThumbnail : ''
+                                }
+                                keyword={this.props.keyword}
+                                authors={book.volumeInfo.authors ? book.volumeInfo.authors : []}
+                                publishedDate={
+                                  book.volumeInfo.publishedDate ?
+                                    book.volumeInfo.publishedDate :
+                                    'Published date not available'
+                                }
+                                searchByTitle={this.props.searchByTitle}
+                                searchByAuthor={this.props.searchByAuthor}
+                                toggleFavorite={this.toggleFavorite}
+                              />
+                            </li>,
+                          )
+                        }
+                      </ul>,
+                    )
+                  }
+                </div>
                 <Pagination />
               </div>
             ) : <Spinner />
