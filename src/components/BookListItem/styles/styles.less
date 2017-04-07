@@ -1,61 +1,78 @@
+.paper {
+  width: 100%;
+  height: 12.5rem;
+
+  @media screen and (max-width: 50.94rem) {
+    max-width: 80%;
+  }
+}
+
 .book-list-item {
-  padding: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  overflow: hidden;
 
   .cover {
-    float: left;
-    margin-right: 10px;
-    box-shadow: 1px 1px 2px rgba(0,0,0,.2);
-
-    figure {
-      margin: 0;
-      padding: 0;
-      width: 128px;
-      height: 188px;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
+    display: flex;
+    padding: 0.5rem;
+    width: 35%;
+    min-width: 8rem;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 0.0625rem solid rgba(0,0,0,.2);
+    
+    .image {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: top center;
     }
   }
 
   .card-content {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: flex-start;
-    width: 290px;
-    height: 190px;
+    width: 65%;
+    height: 100%;
+    padding: 0.3125rem 0.3125rem 0.3125rem 0.625rem;
+    box-sizing: border-box;
 
-    h1, div, p {
+    h1, div, p, header {
       display: inline-flex;
     }
 
-    h1 {
-      display: inline;
-      margin: 0 0 2px 0;
-      padding: 0;
-      max-width: 220px;
-      line-height: 0;
-      font: normal 18px 'robotoregular';
-    }
-
-    .favorite {
-      display: flex;
-      justify-content: flex-end;
-      position: relative;
+    header {
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: flex-start;
       width: 100%;
-      height: 0;
+      margin-bottom: 0;
 
-      button {
-        position: absolute;
-        background: none;
-        border: none;
-        cursor: pointer;
-        outline: none;
+      h1 {
+        margin: 0;
+        display: inline;
+        line-height: 1.375rem;
+        font: normal 1.125rem 'robotoregular';
+      }
 
-        i {
-          color: #F44336;
+      .favorite {
+        
+        button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          outline: none;
+
+          i {
+            color: #F44336;
+          }
         }
       }
     }
@@ -68,7 +85,7 @@
         float: left;
         margin: 0;
         list-style-type: none;
-        font: normal 14px 'robotolight_italic';
+        font: normal 0.875rem 'robotolight_italic';
 
         &:after {
           content: ', ';
@@ -82,20 +99,20 @@
     }
 
     .author {
-      font: normal 14px 'robotolight_italic';
+      font: normal 0.875rem 'robotolight_italic';
     }
 
     .published-date {
-      margin: 0 0 3px 0;
-      font: normal 14px 'robotoregular';
+      margin: 0 0 0.1875rem 0;
+      font: normal 0.875rem 'robotoregular';
       color: #4d6a80;
     }
 
     .description {
       display: inline-block;
-      font: normal 12px 'robotoitalic';
-      width: 250px;
-      margin: 5px 0 5px 0;
+      font: normal 0.75rem 'robotoitalic';
+      width: 100%;
+      margin: 0.3125rem 0 0.3125rem 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

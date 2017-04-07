@@ -7,13 +7,6 @@ import {
 } from '../../actions';
 import './styles/styles.less';
 
-const styles = {
-  bookCard: {
-    width: 440,
-    height: 200,
-  },
-};
-
 class BookListItem extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +16,8 @@ class BookListItem extends Component {
   // Applies highlight on the searched term
   highlight(text, keyword) {
     let _text = text;
-    if (text.length > 55) {
-      _text = `${text.substr(0, 55)}...`;
+    if (text.length > 50) {
+      _text = `${text.substr(0, 50)}...`;
     }
     if (keyword !== '') {
       const reg = new RegExp(keyword, 'ig');
@@ -34,39 +27,40 @@ class BookListItem extends Component {
   }
 
   render() {
+    const image = this.props.smallThumbnail !== '' ?
+                this.props.smallThumbnail :
+                  'https://books.google.com.br/googlebooks/images/no_cover_thumb.gif';
     return (
-      <Paper style={styles.bookCard} zDepth={2}>
+      <Paper className='paper' zDepth={2}>
         <article className='book-list-item'>
           <div className='cover'>
-            <figure>
-              <img
-                src={
-                  this.props.smallThumbnail !== '' ?
-                    this.props.smallThumbnail :
-                    'https://books.google.com.br/googlebooks/images/no_cover_thumb.gif'
-                }
-                alt={this.props.title}
-              />
-            </figure>
+            <div
+              className='image'
+              style={{
+                backgroundImage: `url(${image})`,
+              }}
+            />
           </div>
           <div className='card-content'>
-            <div className='favorite'>
-              <button
-                onClick={() => { this.props.toggleFavorite(this.props.id); }}
-              >
-                {
-                  this.props.favorite ?
-                    <i className="material-icons">favorite</i> :
-                    <i className="material-icons">favorite_border</i>
-                }
-              </button>
-            </div>
-            {
-              this.props.searchByTitle ?
-                <h1
-                  dangerouslySetInnerHTML={this.highlight(this.props.title, this.props.keyword)}
-                /> : <h1>{this.props.title}</h1>
-            }
+            <header>
+              {
+                this.props.searchByTitle ?
+                  <h1
+                    dangerouslySetInnerHTML={this.highlight(this.props.title, this.props.keyword)}
+                  /> : <h1>{this.props.title}</h1>
+              }
+              <div className='favorite'>
+                <button
+                  onClick={() => { this.props.toggleFavorite(this.props.id); }}
+                >
+                  {
+                    this.props.favorite ?
+                      <i className="material-icons">favorite</i> :
+                      <i className="material-icons">favorite_border</i>
+                  }
+                </button>
+              </div>
+            </header>
             <div className='published-date'>{this.props.publishedDate}</div>
             {
               this.props.authors.length > 0 ? (

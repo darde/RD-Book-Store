@@ -8,26 +8,6 @@ import {
 } from '../../actions';
 import './styles/styles.less';
 
-const styles = {
-  paperVisible: {
-    position: 'fixed',
-    width: '100%',
-    maxWidth: 1200,
-    height: 800,
-    zIndex: 20,
-    transform: 'translate3D(0,0,0)',
-    transition: 'transform 0.5s',
-  },
-  paperHidden: {
-    position: 'fixed',
-    width: '100%',
-    maxWidth: 1200,
-    height: 800,
-    zIndex: 20,
-    transform: 'translate3D(0,-800px,0)',
-  },
-};
-
 class BookDetail extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +28,7 @@ class BookDetail extends Component {
 
   render() {
     let book;
+    let image = noPhoto;
     const rating = [];
     if (this.props.books) {
       book = this.props.books.filter(_book => _book.id === this.props.id)[0];
@@ -56,26 +37,43 @@ class BookDetail extends Component {
           rating.push(i);
         }
       }
+      if (book && book.volumeInfo.imageLinks) {
+        image = book.volumeInfo.imageLinks.thumbnail;
+      }
     }
     return (
       <section className={this.state.visible ? 'book-detail visible' : 'book-detail'}>
         <Paper
-          style={this.state.visible ? styles.paperVisible : styles.paperHidden}
+          className={this.state.visible ? 'paper' : 'paper hidden'}
           zDepth={1}
         >
           {
             book && (
               <div className='detail-container'>
-                <div>
-                  <figure>
-                    <img
-                      src={
-                        book.volumeInfo.imageLinks ?
-                          book.volumeInfo.imageLinks.thumbnail : noPhoto
+                <div className='btn-close-container'>
+                  <FlatButton
+                    label="Close"
+                    primary
+                    className='btn'
+                    onClick={
+                      () => {
+                        this.setState({
+                          visible: false,
+                        });
+                        this.props.resetActiveBook();
                       }
-                      alt={book.volumeInfo.title}
+                    }
+                  />
+                </div>
+                <div className='header'>
+                  <div className='cover'>
+                    <div
+                      className='image'
+                      style={{
+                        backgroundImage: `url(${image})`,
+                      }}
                     />
-                  </figure>
+                  </div>
                   <div className='detail-content'>
                     {
                       book.volumeInfo.previewLink ? (
@@ -134,31 +132,19 @@ class BookDetail extends Component {
                       ) : <div className='identifier'>Book identifier not available.</div>
                     }
                   </div>
-                  <div className='detail-content-wide'>
-                    <h2>Description</h2>
-                    <div className='description'>
-                      <p>
-                        {
-                          book.volumeInfo.description ?
-                            book.volumeInfo.description :
-                              'not available'
-                        }
-                      </p>
-                    </div>
+                </div>
+                <div className='detail-content-wide'>
+                  <h2>Description</h2>
+                  <div className='description'>
+                    <p>
+                      {
+                        book.volumeInfo.description ?
+                          book.volumeInfo.description :
+                            'not available'
+                      }
+                    </p>
                   </div>
                 </div>
-                <FlatButton
-                  label="Close"
-                  primary
-                  onClick={
-                    () => {
-                      this.setState({
-                        visible: false,
-                      });
-                      this.props.resetActiveBook();
-                    }
-                  }
-                />
               </div>
             )
           }
