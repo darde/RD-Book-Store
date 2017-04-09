@@ -1,13 +1,9 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import BookListItem from '../BookListItem/BookListItem';
-import Pagination from '../Pagination/Pagination';
+import BookListItem from '../../containers/BookListItem';
+import Pagination from '../../containers/Pagination';
 import Spinner from '../Spinner/Spinner';
 import './styles/styles.less';
-import {
-  toggleFavorite as toogleFavBook,
-} from '../../actions';
 
 class BooksList extends Component {
   constructor(props) {
@@ -171,23 +167,4 @@ BooksList.propTypes = {
   uiOpacity: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = state => ({
-  books: state.books,
-  currentPage: state.pagination.currentPage,
-  itemsPerPage: state.pagination.itemsPerPage,
-  keyword: state.search.keyword,
-  loading: state.search.loading,
-  searchByAuthor: state.search.author,
-  searchByTitle: state.search.title,
-  totalResults: state.pagination.totalResults,
-  uiOpacity: state.ui,
-});
-
-const mapDispatchToProps = dispatch => ({
-  toggleFavorite: (books) => { dispatch(toogleFavBook(books)); },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BooksList);
+export default BooksList;

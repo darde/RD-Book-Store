@@ -1,10 +1,6 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import {
-  setActiveBook as setActive,
-} from '../../actions';
 import './styles/styles.less';
 
 class BookListItem extends Component {
@@ -109,11 +105,4 @@ BookListItem.propTypes = {
   toggleFavorite: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  setActiveBook: (id) => { dispatch(setActive(id)); },
-});
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(BookListItem);
+export default BookListItem;
