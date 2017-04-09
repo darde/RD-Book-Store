@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 import './styles/styles.less';
 
 const logo = require('../../img/resultados_digitais.png');
@@ -28,10 +27,4 @@ Brand.propTypes = {
   uiOpacity: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = state => ({
-  uiOpacity: state.ui,
-});
-
-export default connect(
-  mapStateToProps,
-)(Brand);
+export default Brand;
