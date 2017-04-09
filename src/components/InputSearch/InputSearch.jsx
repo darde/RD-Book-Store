@@ -1,14 +1,8 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
-import {
-  resetSearch as startNewSearch,
-  searchBooks as searchByKeyword,
-  toggleResultsOpacity as toggleOpacity,
-} from '../../actions';
 import './styles/styles.less';
 
 const styles = {
@@ -50,6 +44,9 @@ class InputSearch extends Component {
 
   validateFields(value) {
     if (value !== '' && (this.state.author || this.state.title)) {
+      this.setState({
+        errorText: '',
+      });
       return true;
     } else if (!this.state.title && !this.state.author) {
       this.setState({
@@ -168,20 +165,4 @@ InputSearch.propTypes = {
   firstSearch: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
-  keyword: state.search.keyword,
-  firstSearch: state.search.firstSearch,
-});
-
-const mapDispatchToProps = dispatch => ({
-  searchBooks: (keyword, title, author, remoteStartIndex) => {
-    dispatch(searchByKeyword(keyword, title, author, remoteStartIndex));
-  },
-  resetSearch: () => { dispatch(startNewSearch()); },
-  toggleResultsOpacity: () => { dispatch(toggleOpacity()); },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(InputSearch);
+export default InputSearch;
