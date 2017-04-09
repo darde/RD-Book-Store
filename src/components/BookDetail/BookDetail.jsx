@@ -1,10 +1,8 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import {
   noPhoto,
-  resetActiveBook as resetBook,
 } from '../../actions';
 import './styles/styles.less';
 
@@ -165,16 +163,4 @@ BookDetail.defaultProps = {
   books: [],
 };
 
-const mapStateToProps = state => ({
-  id: state.bookDetail.id,
-  books: state.books,
-});
-
-const mapDispatchToProps = dispatch => ({
-  resetActiveBook: () => { dispatch(resetBook()); },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BookDetail);
+export default BookDetail;

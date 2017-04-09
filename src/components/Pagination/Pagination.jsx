@@ -1,11 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {
-  changePage as callNext,
-  pullNewPages as pullNew,
-} from '../../actions';
 import './styles/styles.less';
 
 class Pagination extends Component {
@@ -174,23 +169,4 @@ Pagination.propTypes = {
   changePage: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  currentPage: state.pagination.currentPage,
-  itemsArround: state.pagination.itemsArround,
-  itemsPerPage: state.pagination.itemsPerPage,
-  loading: state.search.loading,
-  maxResults: state.pagination.maxResults,
-  pulls: state.pagination.pulls,
-  remoteStartIndex: state.search.remoteStartIndex,
-  totalResults: state.pagination.totalResults,
-});
-
-const mapDispatchToProps = dispatch => ({
-  changePage: (page) => { dispatch(callNext(page)); },
-  pullNewPages: (startIndex) => { dispatch(pullNew(startIndex)); },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Pagination);
+export default Pagination;

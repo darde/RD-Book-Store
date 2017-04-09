@@ -1,8 +1,8 @@
 import React from 'react';
-import BooksList from './BooksList/BooksList';
-import Brand from './Brand/Brand';
+import BooksList from '../containers/BooksList';
+import Brand from '../containers/Brand';
 import InputSearch from '../containers/InputSearch';
-import BookDetail from './BookDetail/BookDetail';
+import BookDetail from '../containers/BookDetail';
 import '../styles/main.less';
 
 const Home = () => (
