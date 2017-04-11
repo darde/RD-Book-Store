@@ -17,9 +17,6 @@ export const searchBooks = (search) => {
   if (search.author) {
     query += query !== '' ? `+inauthor:${keyword}` : `inauthor:${keyword}`;
   }
-  if (search.subject) {
-    query += query !== '' ? `+subject:${keyword}` : `subject:${keyword}`;
-  }
   return axios.get(URL, {
     params: {
       q: query,
